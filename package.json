@@ -1,5 +1,5 @@
 {
-    "name": "com.omb.gameframework",
+    "name": "com.omb.game-framework",
     "version": "0.1.2",
     "displayName": "Game-Framework",
     "dependencies": {
