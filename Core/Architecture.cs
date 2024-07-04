@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace GameFramework
 {
-    public abstract class Architecture<T> : IArchitecture where T: Architecture<T>, new()
+    public abstract class Architecture<T> : IArchitecture where T : Architecture<T>, new()
     {
 
         private HashSet<ISystem> _systems;
         private HashSet<MonoSystem> _components;
         private IOCContainer _iocContainer;
-        
+
         private static T _architecture;
         public static IArchitecture Interface
         {
@@ -26,8 +26,8 @@ namespace GameFramework
         public static void ValidateArchitecture()
         {
             if (_architecture != null) return;
-            
-            Debug.Log("Validating Architecture");
+
+            Logger.Log<Architecture<T>>("Validating Architecture");
 
             _architecture = new T
             {
@@ -43,40 +43,40 @@ namespace GameFramework
         public void AddMono<TMono>(TMono component) where TMono : MonoSystem
         {
             _components ??= new HashSet<MonoSystem>();
-            
-            Debug.Log($"Attempting to register Mono {component.GetType()}");
-            
+
+            Logger.Log<Architecture<T>>($"Attempting to register Mono {component.GetType()}");
+
             _components.Add(component);
             _iocContainer.Register<TMono>(component);
-            
-            Debug.Log($"Initialising {component.GetType()}");
-            
+
+            Logger.Log<Architecture<T>>($"Initialising {component.GetType()}");
+
             component.GetOrAddComponent<UnRegisterOnDestroy>().AddTarget(_architecture, component);
-            
-            Debug.Log($"Successfully Added Mono {component.GetType()}");
+
+            Logger.Log<Architecture<T>>($"Successfully Added Mono {component.GetType()}");
         }
 
         public void RemoveMono<TMono>(TMono component) where TMono : MonoSystem
         {
-            Debug.Log($"Attempting to remove Mono {component.GetType()}");
+            Logger.Log<Architecture<T>>($"Attempting to remove Mono {component.GetType()}");
             _iocContainer.UnRegister(component);
-            Debug.Log($"Successfully Removed Mono {component.GetType()}");
+            Logger.Log<Architecture<T>>($"Successfully Removed Mono {component.GetType()}");
         }
 
         public void AddSystem<TSystem>(TSystem system) where TSystem : ISystem
         {
             _systems ??= new HashSet<ISystem>();
-            Debug.Log($"Attempting to register System {typeof(TSystem)}");
-            
+            Logger.Log<Architecture<T>>($"Attempting to register System {typeof(TSystem)}");
+
             system.SetArchitecture(this);
             _iocContainer.Register<TSystem>(system);
             _systems.Add(system);
-            
-            Debug.Log($"Initialising System {typeof(TSystem)}");
-            
+
+            Logger.Log<Architecture<T>>($"Initialising System {typeof(TSystem)}");
+
             system.Init();
-            
-            Debug.Log($"Successfully registered System {typeof(TSystem)}");
+
+            Logger.Log<Architecture<T>>($"Successfully registered System {typeof(TSystem)}");
         }
 
         public TMono GetMono<TMono>() where TMono : MonoSystem
