@@ -1,7 +1,7 @@
 {
     "name": "com.omb.gameframework",
     "version": "0.1.2",
-    "displayName": "Game Framework",
+    "displayName": "Game-Framework",
     "dependencies": {
         "com.unity.addressables": "1.21.21"
     }
